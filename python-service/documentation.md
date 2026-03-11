@@ -25,19 +25,6 @@ This feature provides a robust pipeline for analysts to store structured company
 
 This implementation leverages **Jinja2** to render beautiful and consistent HTML reports from stored briefing objects.
 
-### How to Configure
-
-1. Create a `.env` file in the `python-service` root based on the provided `.env.example`.
-2. Add your specific PostgreSQL connection details mapping to the local database container:
-   ```env
-   DATABASE_URL=postgresql://assessment_user:assessment_pass@localhost:5432/assessment_db
-   APP_ENV=development
-   APP_PORT=8000
-   ```
-3. Start the virtual environment (`source .venv/bin/activate`) and install dependencies (`pip install -r requirements.txt`).
-4. Apply pending migrations using `python -m app.db.run_migrations up`.
-5. Run the ASGI development server (`python -m uvicorn app.main:app --reload --port 8000`).
-
 ### Technical Details on Generation
 Calling the generation endpoint transforms the stored ORM objects natively to HTML strings using `Environment.get_template().render()`. The HTML generation intelligently groups dynamic looping components like numerical metrics, risks, and bullet points. In the event the underlying HTML output is requested before a briefing has actually been "generated", the API enforces state consistency by raising an `HTTP 409 Conflict`.
 
