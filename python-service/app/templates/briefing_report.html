@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ vm.report_title }}</title>
+    <style>
+      /* ------------------------------------------------------------------ */
+      /*  Design tokens                                                       */
+      /* ------------------------------------------------------------------ */
+      :root {
+        --brand:         #1a2f5e;
+        --brand-light:   #2e4a8c;
+        --accent:        #c9a84c;
+        --bg:            #f5f6fa;
+        --surface:       #ffffff;
+        --border:        #dde1ea;
+        --text-primary:  #1c2030;
+        --text-secondary:#4a5168;
+        --text-muted:    #8892a4;
+        --risk-bg:       #fff4f4;
+        --risk-border:   #e8b4b4;
+        --risk-text:     #7b2323;
+        --kp-bg:         #f0f5ff;
+        --kp-border:     #bccde8;
+        --kp-text:       #1a2f5e;
+        --radius:        8px;
+        --shadow:        0 2px 8px rgba(0,0,0,.08);
+        --font:          "Georgia", "Times New Roman", serif;
+        --font-ui:       "Helvetica Neue", Arial, sans-serif;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Base                                                                */
+      /* ------------------------------------------------------------------ */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        background: var(--bg);
+        color: var(--text-primary);
+        font-family: var(--font);
+        line-height: 1.7;
+        padding: 2rem 1rem;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Report container                                                    */
+      /* ------------------------------------------------------------------ */
+      .report {
+        max-width: 860px;
+        margin: 0 auto;
+        background: var(--surface);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Header / title bar                                                  */
+      /* ------------------------------------------------------------------ */
+      .report-header {
+        background: var(--brand);
+        color: #fff;
+        padding: 2.5rem 2.5rem 2rem;
+        border-bottom: 4px solid var(--accent);
+      }
+
+      .report-header .label {
+        font-family: var(--font-ui);
+        font-size: .75rem;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: .5rem;
+      }
+
+      .report-header h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 1.25;
+        margin-bottom: 1.25rem;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Company info card                                                   */
+      /* ------------------------------------------------------------------ */
+      .company-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: .5rem 1.5rem;
+        background: rgba(255,255,255,.08);
+        border-radius: var(--radius);
+        padding: 1rem 1.25rem;
+      }
+
+      .company-grid dt {
+        font-family: var(--font-ui);
+        font-size: .7rem;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,.55);
+        margin-bottom: .15rem;
+      }
+
+      .company-grid dd {
+        font-family: var(--font-ui);
+        font-size: .95rem;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Body                                                                */
+      /* ------------------------------------------------------------------ */
+      .report-body {
+        padding: 2rem 2.5rem;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Section                                                             */
+      /* ------------------------------------------------------------------ */
+      section {
+        margin-bottom: 2rem;
+      }
+
+      section h2 {
+        font-family: var(--font-ui);
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+        color: var(--brand);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: .4rem;
+        margin-bottom: 1rem;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Executive summary                                                   */
+      /* ------------------------------------------------------------------ */
+      .summary-text {
+        font-size: 1.0125rem;
+        color: var(--text-primary);
+        max-width: 72ch;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Key points                                                          */
+      /* ------------------------------------------------------------------ */
+      .point-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: .6rem;
+      }
+
+      .point-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        background: var(--kp-bg);
+        border-left: 3px solid var(--kp-border);
+        border-radius: 0 var(--radius) var(--radius) 0;
+        padding: .65rem .9rem;
+        color: var(--kp-text);
+        font-size: .975rem;
+      }
+
+      .point-list li::before {
+        content: "▸";
+        color: var(--brand-light);
+        flex-shrink: 0;
+        margin-top: .1em;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Risks                                                               */
+      /* ------------------------------------------------------------------ */
+      .risk-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: .6rem;
+      }
+
+      .risk-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        background: var(--risk-bg);
+        border-left: 3px solid var(--risk-border);
+        border-radius: 0 var(--radius) var(--radius) 0;
+        padding: .65rem .9rem;
+        color: var(--risk-text);
+        font-size: .975rem;
+      }
+
+      .risk-list li::before {
+        content: "⚠";
+        flex-shrink: 0;
+        margin-top: .1em;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Recommendation                                                      */
+      /* ------------------------------------------------------------------ */
+      .recommendation-box {
+        background: #f9f6ee;
+        border: 1px solid #d9cfa0;
+        border-left: 4px solid var(--accent);
+        border-radius: var(--radius);
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+        color: var(--text-primary);
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Metrics table                                                       */
+      /* ------------------------------------------------------------------ */
+      .metrics-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font-ui);
+        font-size: .9rem;
+      }
+
+      .metrics-table thead th {
+        text-align: left;
+        font-size: .7rem;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border);
+        padding: .4rem .75rem;
+      }
+
+      .metrics-table tbody tr:nth-child(even) {
+        background: var(--bg);
+      }
+
+      .metrics-table tbody td {
+        padding: .6rem .75rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-primary);
+      }
+
+      .metrics-table tbody td:last-child {
+        font-weight: 600;
+        color: var(--brand);
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Footer                                                              */
+      /* ------------------------------------------------------------------ */
+      .report-footer {
+        background: var(--bg);
+        border-top: 1px solid var(--border);
+        padding: 1rem 2.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: .5rem;
+        font-family: var(--font-ui);
+        font-size: .78rem;
+        color: var(--text-muted);
+      }
+
+      .report-footer .brand {
+        font-weight: 600;
+        color: var(--brand);
+        letter-spacing: .05em;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /*  Print                                                               */
+      /* ------------------------------------------------------------------ */
+      @media print {
+        body { background: #fff; padding: 0; }
+        .report { box-shadow: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <article class="report" aria-label="Analyst Briefing Report">
+
+      <!-- ================================================================ -->
+      <!--  Header                                                            -->
+      <!-- ================================================================ -->
+      <header class="report-header">
+        <p class="label">Internal Analyst Briefing</p>
+        <h1>{{ vm.report_title }}</h1>
+
+        <dl class="company-grid">
+          <div>
+            <dt>Company</dt>
+            <dd>{{ vm.company_name }}</dd>
+          </div>
+          <div>
+            <dt>Ticker</dt>
+            <dd>{{ vm.ticker }}</dd>
+          </div>
+          <div>
+            <dt>Sector</dt>
+            <dd>{{ vm.sector }}</dd>
+          </div>
+          <div>
+            <dt>Analyst</dt>
+            <dd>{{ vm.analyst_name }}</dd>
+          </div>
+          <div>
+            <dt>Report&nbsp;ID</dt>
+            <dd>#{{ vm.briefing_id }}</dd>
+          </div>
+        </dl>
+      </header>
+
+      <!-- ================================================================ -->
+      <!--  Body                                                              -->
+      <!-- ================================================================ -->
+      <div class="report-body">
+
+        <!-- Executive Summary -->
+        <section aria-labelledby="section-summary">
+          <h2 id="section-summary">Executive Summary</h2>
+          <p class="summary-text">{{ vm.summary }}</p>
+        </section>
+
+        <!-- Key Points -->
+        <section aria-labelledby="section-key-points">
+          <h2 id="section-key-points">Key Points</h2>
+          <ul class="point-list">
+            {% for point in vm.key_points %}
+            <li>{{ point }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+
+        <!-- Risks -->
+        <section aria-labelledby="section-risks">
+          <h2 id="section-risks">Risks</h2>
+          <ul class="risk-list">
+            {% for risk in vm.risks %}
+            <li>{{ risk }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+
+        <!-- Recommendation -->
+        <section aria-labelledby="section-recommendation">
+          <h2 id="section-recommendation">Recommendation</h2>
+          <p class="recommendation-box">{{ vm.recommendation }}</p>
+        </section>
+
+        <!-- Metrics (optional) -->
+        {% if vm.has_metrics %}
+        <section aria-labelledby="section-metrics">
+          <h2 id="section-metrics">Key Metrics</h2>
+          <table class="metrics-table">
+            <thead>
+              <tr>
+                <th scope="col">Metric</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for metric in vm.metrics %}
+              <tr>
+                <td>{{ metric.name }}</td>
+                <td>{{ metric.value }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </section>
+        {% endif %}
+
+      </div><!-- /.report-body -->
+
+      <!-- ================================================================ -->
+      <!--  Footer                                                            -->
+      <!-- ================================================================ -->
+      <footer class="report-footer">
+        <span class="brand">InsightOps</span>
+        <span>Generated on {{ vm.generated_at_display }} · Briefing #{{ vm.briefing_id }}</span>
+      </footer>
+
+    </article>
+  </body>
+</html>
