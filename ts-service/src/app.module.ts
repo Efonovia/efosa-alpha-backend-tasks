@@ -4,10 +4,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthModule } from './auth/auth.module';
 import { defaultDatabaseUrl, getTypeOrmOptions } from './config/typeorm.options';
+import { DocumentsModule } from './documents/documents.module';
 import { HealthModule } from './health/health.module';
 import { LlmModule } from './llm/llm.module';
 import { QueueModule } from './queue/queue.module';
 import { SampleModule } from './sample/sample.module';
+import { SummariesModule } from './summaries/summaries.module';
 
 @Module({
   imports: [
@@ -18,10 +20,12 @@ import { SampleModule } from './sample/sample.module';
         getTypeOrmOptions(configService.get<string>('DATABASE_URL') ?? defaultDatabaseUrl),
     }),
     AuthModule,
+    DocumentsModule,
     HealthModule,
     QueueModule,
     LlmModule,
     SampleModule,
+    SummariesModule,
   ],
 })
 export class AppModule {}
