@@ -89,7 +89,6 @@ ${combinedDocuments}`;
       if (!text) {
         throw new Error('Gemini API returned an empty response.');
       }
-
       const parsed: CandidateSummaryResult = JSON.parse(text);
       return parsed;
     } catch (error) {

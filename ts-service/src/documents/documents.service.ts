@@ -37,7 +37,7 @@ export class DocumentsService {
     }
 
     // 2. File storage (local FS abstraction)
-    const storageKey = `docs/${user.workspaceId}/${candidateId}/${randomUUID()}.txt`;
+    const storageKey = `docs/workspace-${user.workspaceId}/${candidateId}/${randomUUID()}.txt`;
     const fullPath = path.join(UPLOADS_DIR, storageKey);
 
     try {

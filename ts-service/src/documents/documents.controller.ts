@@ -6,12 +6,12 @@ import { FakeAuthGuard } from '../auth/fake-auth.guard';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 
-@Controller()
+@Controller('candidates/:candidateId/documents')
 @UseGuards(FakeAuthGuard)
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
 
-  @Post('candidates/:candidateId/documents')
+  @Post()
   async createDocument(
     @CurrentUser() user: AuthUser,
     @Param('candidateId') candidateId: string,

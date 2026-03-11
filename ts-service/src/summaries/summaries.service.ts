@@ -8,6 +8,7 @@ import { AuthUser } from '../auth/auth.types';
 import { CandidateSummary } from '../entities/candidate-summary.entity';
 import { SampleCandidate } from '../entities/sample-candidate.entity';
 import { QueueService } from '../queue/queue.service';
+import { CandidateDocument } from 'src/entities/candidate-document.entity';
 
 export interface GenerateSummaryJobPayload {
   candidateId: string;
@@ -21,6 +22,8 @@ export class SummariesService {
     private readonly summariesRepository: Repository<CandidateSummary>,
     @InjectRepository(SampleCandidate)
     private readonly candidatesRepository: Repository<SampleCandidate>,
+    @InjectRepository(CandidateDocument)
+    private readonly documentsRepository: Repository<CandidateDocument>,
     private readonly queueService: QueueService,
   ) {}
 
@@ -45,6 +48,14 @@ export class SummariesService {
     });
     await this.summariesRepository.save(summary);
 
+    const documents = await this.documentsRepository.find({
+      where: { candidateId },
+    });
+
+    if(documents.length <1) {
+      throw new NotFoundException('Candidate has no documents');
+    }
+
     // 3. Enqueue background processing
     this.queueService.enqueue<GenerateSummaryJobPayload>('generate_summary', {
       candidateId,
@@ -62,7 +73,7 @@ export class SummariesService {
       where: { id: candidateId, workspaceId: user.workspaceId },
     });
     if (!candidate) {
-      throw new NotFoundException('Candidate not found');
+      throw new NotFoundException('Candidate not found or access denied');
     }
 
     return this.summariesRepository.find({
@@ -76,7 +87,7 @@ export class SummariesService {
       where: { id: candidateId, workspaceId: user.workspaceId },
     });
     if (!candidate) {
-      throw new NotFoundException('Candidate not found');
+      throw new NotFoundException('Candidate not found or access denied');
     }
 
     const summary = await this.summariesRepository.findOne({

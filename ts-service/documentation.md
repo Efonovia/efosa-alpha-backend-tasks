@@ -6,11 +6,11 @@ This feature provides a robust asynchronous pipeline for recruiters to upload ca
 ## Architectural Decisions & Assumptions
 
 1. **Document Storage abstraction** 
-   - Uploaded documents are saved both in the PostgreSQL database (`candidate_documents` table) and locally to the file system (`uploads/docs/{workspaceId}/{candidateId}/{uuid}.txt`). In an ideal system the documents will be stored in an object storage like aws S3
+   - Uploaded documents are saved both in the PostgreSQL database (`candidate_documents` table) and locally to the file system (`uploads/docs/workspace-{workspaceId}/{candidateId}/{uuid}.txt`). In an ideal system the documents will be stored in an object storage like aws S3
    - *Assumption*: Text extraction has already occurred, and the API payload delivers `rawText` securely. The local file storage serves as a conceptual cloud bucket (e.g., S3).
 
 2. **Database Schema & Migrations**
-   - Added `candidate_documents` and `candidate_summaries` tables with strong relational ties to `sample_candidates` (`ON DELETE CASCADE`).
+   - I added `candidate_documents` and `candidate_summaries` tables with strong relational ties to `sample_candidates` (`ON DELETE CASCADE`).
    - Utilized standard TypeORM migrations. 
 
 3. **Background Queue & Worker Pattern**
@@ -20,11 +20,14 @@ This feature provides a robust asynchronous pipeline for recruiters to upload ca
 
 4. **Access Control (Authorization)**
    - Used the mock headers (`x-user-id`, `x-workspace-id`) via `FakeAuthGuard` and `@CurrentUser()` decorator.
-   - All document and summary queries strictly filter down by checking if the candidate inherently belongs to the user's `workspaceId`.
+   - All document and summary queries strictly filter down by checking if the candidate belongs to the user's `workspaceId`.
 
 5. **LLM Provider Abstraction**
    - Set up `SUMMARIZATION_PROVIDER` as an interface to decouple the business logic from Google Gemini.
-   - `LlmModule` handles DI dynamically: if `GEMINI_API_KEY` is available in the environment variables, the real `GeminiSummarizationProvider` is injected; otherwise, the `FakeSummarizationProvider` serves mocked results.
+   - `LlmModule` handles dependency injection dynamically: if `GEMINI_API_KEY` is available in the environment variables, the real `GeminiSummarizationProvider` is injected; otherwise, the `FakeSummarizationProvider` serves mocked results.
+
+6. **Summary Generation**
+   - I added a check to make sure the candidate has atleast one document before a summary can be generated. This makes sure there is no unexpected response from the LLM when given an empty document.
 
 ## LLM Provider Setup (Google Gemini)
 
