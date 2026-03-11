@@ -53,7 +53,7 @@ export class SummariesService {
     });
 
     if(documents.length <1) {
-      throw new NotFoundException('Candidate has no documents');
+      throw new NotFoundException('Candidate has no documents to be summarized');
     }
 
     // 3. Enqueue background processing

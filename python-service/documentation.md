@@ -58,7 +58,7 @@ Retrieve stored briefing data fields by ID.
 **`POST /briefings/{briefing_id}/generate`**  
 Generate the HTML report for an existing briefing and mark it as generated.
 
-**Response:** Returns the updated structured briefing data marking `is_generated: true` and outputting the UTC `generated_at` timestamp.
+**Response:** Returns a message telling the user that the report has been generated and can be viewed at `/briefings/{briefing_id}/html`.
 
 **`GET /briefings/{briefing_id}/html`**  
 Retrieves the rendered HTML template.
