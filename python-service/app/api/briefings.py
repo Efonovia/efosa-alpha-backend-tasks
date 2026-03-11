@@ -43,15 +43,13 @@ def get_briefing_endpoint(briefing_id: int, db: DbDep) -> BriefingRead:
 
 @router.post(
     "/{briefing_id}/generate",
-    response_model=BriefingGeneratedRead,
-    response_model_by_alias=True,
     status_code=status.HTTP_200_OK,
     response_description="HTML Report generated successfully"
 )
-def generate_briefing_endpoint(briefing_id: int, db: DbDep) -> BriefingGeneratedRead:
+def generate_briefing_endpoint(briefing_id: int, db: DbDep) -> dict:
     """Generate the HTML report for an existing briefing and mark it as generated."""
-    briefing = generate_briefing(db, briefing_id)
-    return BriefingGeneratedRead.model_validate(briefing)
+    generate_briefing(db, briefing_id)
+    return {"message": f"Report has been generated for the briefing and can be viewed at /briefings/{briefing_id}/html"}
 
 
 @router.get("/{briefing_id}/html", response_class=HTMLResponse)

@@ -200,8 +200,8 @@ def test_generate_briefing_marks_as_generated(client: TestClient) -> None:
     resp = client.post(f"/briefings/{created['id']}/generate")
     assert resp.status_code == 200
     data = resp.json()
-    assert data["isGenerated"] is True
-    assert data["generatedAt"] is not None
+    assert "message" in data
+    assert f"/briefings/{created['id']}/html" in data["message"]
 
 
 def test_generate_briefing_unknown_id_returns_404(client: TestClient) -> None:
