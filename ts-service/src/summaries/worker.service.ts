@@ -24,7 +24,26 @@ export class WorkerService implements OnModuleInit {
     private readonly summarizationProvider: SummarizationProvider,
   ) {}
 
-  onModuleInit() {
+  async onModuleInit() {
+    this.logger.log('Checking for backlogs summaries...');
+    const pendingSummaries = await this.summariesRepository.find({
+      where: { status: 'pending' },
+    });
+
+    for (const summary of pendingSummaries) {
+      this.logger.log(`Found backlog summary ${summary.id} for candidate ${summary.candidateId}. Enqueuing...`);
+      this.queueService.enqueue<GenerateSummaryJobPayload>('generate_summary', {
+        candidateId: summary.candidateId,
+        summaryId: summary.id,
+      });
+    }
+
+    if (pendingSummaries.length > 0) {
+      this.logger.log(`Enqueued ${pendingSummaries.length} backlogs summaries.`);
+    } else {
+      this.logger.log('No backlogs summaries found.');
+    }
+
     // Start polling the queue service since it doesn't emit events
     this.pollingInterval = setInterval(() => {
       this.pollQueue();

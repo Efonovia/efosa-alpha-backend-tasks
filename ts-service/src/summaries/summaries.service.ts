@@ -8,7 +8,7 @@ import { AuthUser } from '../auth/auth.types';
 import { CandidateSummary } from '../entities/candidate-summary.entity';
 import { SampleCandidate } from '../entities/sample-candidate.entity';
 import { QueueService } from '../queue/queue.service';
-import { CandidateDocument } from 'src/entities/candidate-document.entity';
+import { CandidateDocument } from '../entities/candidate-document.entity';
 
 export interface GenerateSummaryJobPayload {
   candidateId: string;

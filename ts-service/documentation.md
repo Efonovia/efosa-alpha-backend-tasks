@@ -17,6 +17,7 @@ This feature provides a robust asynchronous pipeline for recruiters to upload ca
    - The summary generation endpoint strictly enqueues a job (`generate_summary`) into the memory queue using `QueueService`. It does not process the content inline.
    - `WorkerService` polls the queue periodically, pulling pending jobs securely while maintaining state (`processedJobIds`) to prevent duplicate executions.
    - Summaries undergo proper status progression (`pending` -> `completed` or `failed`). 
+   - On startup, the worker service will check for any pending summaries and enqueue them for processing. Ensuring that no pending summaries are lost in case the service was down.
 
 4. **Access Control (Authorization)**
    - Used the mock headers (`x-user-id`, `x-workspace-id`) via `FakeAuthGuard` and `@CurrentUser()` decorator.

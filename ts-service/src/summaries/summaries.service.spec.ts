@@ -2,6 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
+import { CandidateDocument } from '../entities/candidate-document.entity';
 import { CandidateSummary } from '../entities/candidate-summary.entity';
 import { SampleCandidate } from '../entities/sample-candidate.entity';
 import { QueueService } from '../queue/queue.service';
@@ -22,6 +23,10 @@ describe('SummariesService', () => {
     findOne: jest.fn(),
   };
 
+  const documentsRepository = {
+    find: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.clearAllMocks();
 
@@ -40,6 +45,10 @@ describe('SummariesService', () => {
           provide: getRepositoryToken(SampleCandidate),
           useValue: candidatesRepository,
         },
+        {
+          provide: getRepositoryToken(CandidateDocument),
+          useValue: documentsRepository,
+        },
       ],
     }).compile();
 
@@ -57,6 +66,7 @@ describe('SummariesService', () => {
 
     it('creates pending summary and enqueues job', async () => {
       candidatesRepository.findOne.mockResolvedValue({ id: 'c1', workspaceId: 'w1' });
+      documentsRepository.find.mockResolvedValue([{ id: 'doc1' }]);
       summariesRepository.create.mockImplementation((val) => val);
       summariesRepository.save.mockImplementation(async (val) => val);
 
