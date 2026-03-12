@@ -53,7 +53,7 @@ The raw text from all provided documents for a candidate is concatenated and pas
 ## API Endpoints Reference
 
 ### Candidate Documents
-**`POST /candidates/:candidateId/documents`**  
+**`POST /documents/candidate/:candidateId`**  
 Stores a candidate document text locally and in the database.
 
 **Headers:**
@@ -70,7 +70,7 @@ Stores a candidate document text locally and in the database.
 ```
 
 **`GET /documents`**  
-Retrieves an aggregated list of all documents associated with any candidate belonging to the user's workspace.
+Retrieves an aggregated list of all documents associated with all candidates belonging to the user's workspace.
 
 **Headers:**
 - `x-user-id`
@@ -79,7 +79,7 @@ Retrieves an aggregated list of all documents associated with any candidate belo
 ---
 
 ### Candidate Summaries
-**`POST /candidates/:candidateId/summaries/generate`**  
+**`POST /candidate/:candidateId/summaries/generate`**  
 Asynchronously requests an LLM-generated summary, enqueuing the background worker.
 
 **Headers:**
@@ -90,12 +90,26 @@ Asynchronously requests an LLM-generated summary, enqueuing the background worke
 ```json
 {
   "message": "Summary generation enqueued successfully",
-  "summaryId": "uuid-string..."
+  "summary": {
+        "id": "8a7d8a20-871f-45d0-a38f-4da3ce204508",
+        "candidateId": "c6e1a0f8-49a3-494e-9328-744d07db9560",
+        "status": "pending",
+        "score": null,
+        "strengths": null,
+        "concerns": null,
+        "summary": null,
+        "recommendedDecision": null,
+        "provider": null,
+        "promptVersion": null,
+        "errorMessage": null,
+        "createdAt": "2026-03-12T09:51:54.694Z",
+        "updatedAt": "2026-03-12T09:51:54.694Z"
+    }
 }
 ```
 
-**`GET /candidates/:candidateId/summaries`**  
+**`GET /candidate/:candidateId/summaries`**  
 Lists all previously requested summaries for the candidate.
 
-**`GET /candidates/:candidateId/summaries/:summaryId`**  
-Retrieves details of a specific summary.
+**`GET /candidate/:candidateId/summaries/:summaryId`**  
+Retrieves details of a specific candidate's summary.

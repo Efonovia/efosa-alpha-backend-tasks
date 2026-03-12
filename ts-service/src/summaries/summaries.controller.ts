@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 
 import { CurrentUser } from '../auth/auth-user.decorator';
 import { AuthUser } from '../auth/auth.types';
 import { FakeAuthGuard } from '../auth/fake-auth.guard';
 import { SummariesService } from './summaries.service';
 
-@Controller('candidates/:candidateId/summaries')
+@Controller('candidate/:candidateId/summaries')
 @UseGuards(FakeAuthGuard)
 export class SummariesController {
   constructor(private readonly summariesService: SummariesService) {}

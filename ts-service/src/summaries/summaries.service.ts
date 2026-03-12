@@ -30,7 +30,7 @@ export class SummariesService {
   async requestSummaryGeneration(
     user: AuthUser,
     candidateId: string,
-  ): Promise<{ message: string; summaryId: string }> {
+  ): Promise<{ message: string; summary: CandidateSummary }> {
     // 1. Validate candidate belongs to workspace
     const candidate = await this.candidatesRepository.findOne({
       where: { id: candidateId, workspaceId: user.workspaceId },
@@ -63,8 +63,8 @@ export class SummariesService {
     });
 
     return {
-      message: 'Summary generation enqueued successfully',
-      summaryId: summary.id,
+      message: `Summary generation enqueued successfully and the results will be processed soon. You can check the endpoint: /candidate/${candidateId}/summaries to see if the summary generation has been completed.`,
+      summary
     };
   }
 

@@ -81,7 +81,6 @@ export class WorkerService implements OnModuleInit {
         where: { candidateId: payload.candidateId },
       });
 
-      // read `rawText` directly from database since we store it there as well as locally
       const docContents = documents.map(doc => doc.rawText);
 
       // Call gemini
