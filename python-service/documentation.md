@@ -28,6 +28,9 @@ This implementation leverages **Jinja2** to render beautiful and consistent HTML
 ### Technical Details on Generation
 Calling the generation endpoint transforms the stored ORM objects natively to HTML strings using `Environment.get_template().render()`. The HTML generation intelligently groups dynamic looping components like numerical metrics, risks, and bullet points. In the event the underlying HTML output is requested before a briefing has actually been "generated", the API enforces state consistency by raising an `HTTP 409 Conflict`.
 
+### Starting the Project
+Starting the project is still the same steps as listed in the original readme.md. nothing has changes in that regard
+
 ## API Endpoints Reference
 
 ### Analyst Briefings

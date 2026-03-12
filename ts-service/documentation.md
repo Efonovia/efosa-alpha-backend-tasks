@@ -30,11 +30,14 @@ This feature provides a robust asynchronous pipeline for recruiters to upload ca
 6. **Summary Generation**
    - I added a check to make sure the candidate has atleast one document before a summary can be generated. This makes sure there is no unexpected response from the LLM when given an empty document.
 
+### Starting the Project
+Starting the project is still the same steps as listed in the original readme.md. nothing has changes in that regard
+
 ## LLM Provider Setup (Google Gemini)
 
 This implementation uses **Google Gemini 2.5 Flash** due to its fast inference and structured JSON schema output capabilities.
 
-### How to Configure
+### How to Configure the LLM Provider
 
 1. Get a free API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
 2. Create a `.env` file in the `ts-service` root based on the provided `.env.example`.
