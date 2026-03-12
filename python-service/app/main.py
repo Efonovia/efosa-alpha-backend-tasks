@@ -1,4 +1,9 @@
+import warnings
 from fastapi import FastAPI
+
+# Suppress Pydantic UnsupportedFieldAttributeWarning
+warnings.filterwarnings("ignore", category=UserWarning, message=".*'alias' attribute.*has no effect.*")
+
 
 from app.api.briefings import router as briefings_router
 from app.api.health import router as health_router
